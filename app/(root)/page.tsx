@@ -1,4 +1,11 @@
-function HomePage() {
+import SearchForm from "../../components/SearchForm";
+
+async function HomePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ query?: string }>;
+}) {
+  const query = (await searchParams).query;
   return (
     <>
       <section className="pink_container">
@@ -9,6 +16,8 @@ function HomePage() {
           Submit Ideas, Vote on Pitches, and Get Noticed in Vertual
           Competitions.
         </p>
+
+        <SearchForm query={query} />
       </section>
     </>
   );
