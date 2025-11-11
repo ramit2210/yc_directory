@@ -35,7 +35,7 @@ const workSans = localFont({
       style: "normal",
     },
     {
-      path: "./fonts/WorkSans-Thin.ttf",
+      path: "./fonts/WorkSans-thin.ttf",
       weight: "200",
       style: "normal",
     },
@@ -45,7 +45,7 @@ const workSans = localFont({
       style: "normal",
     },
   ],
-  variable: "--font-work-sans",
+  variable: "--font-geist-sans",
 });
 
 export const metadata: Metadata = {
