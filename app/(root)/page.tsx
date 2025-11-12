@@ -1,5 +1,25 @@
 import StartupCard from "@/components/StartupCard";
 import SearchForm from "../../components/SearchForm";
+import { getStartups } from "@/lib/queries";
+
+type StartupTypeCard = {
+  id: number;
+  title: string;
+  slug: string;
+  description: string | null;
+  category: string;
+  views: number | null;
+  pitch: string | null;
+  image: string;
+  createdAt: string;
+  author: {
+    id: number;
+    name: string;
+    username: string;
+    image: string | null;
+    bio: string | null;
+  } | null;
+};
 
 async function HomePage({
   searchParams,
@@ -7,18 +27,9 @@ async function HomePage({
   searchParams: Promise<{ query?: string }>;
 }) {
   const query = (await searchParams).query;
-  const posts = [
-    {
-      _createdAt: new Date(),
-      views: 55,
-      author: { _id: 1, name: "John Doe" },
-      _id: 1,
-      description: "This is a sample description",
-      image: "https://picsum.photos/200/300",
-      category: "Tech",
-      title: "Sample Post 1",
-    },
-  ];
+
+  const posts = await getStartups(query);
+
   return (
     <>
       <section className="pink_container">
@@ -39,8 +50,8 @@ async function HomePage({
         </p>
         <ul className="mt-7 card_grid">
           {posts?.length > 0 ? (
-            posts.map((post: StartupCardType, index: number) => (
-              <StartupCard key={post?._id} post={post} />
+            posts.map((post: StartupTypeCard) => (
+              <StartupCard key={post?.id} post={post} />
             ))
           ) : (
             <p className="no-results">No startups found</p>

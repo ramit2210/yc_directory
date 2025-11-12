@@ -1,4 +1,4 @@
-import { pgTable, serial, text, varchar } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, varchar, timestamp } from "drizzle-orm/pg-core";
 
 export const author = pgTable("author", {
   id: serial("id").primaryKey(),
@@ -7,4 +7,5 @@ export const author = pgTable("author", {
   email: varchar("email", { length: 255 }).notNull().unique(),
   image: text("image"),
   bio: text("bio"),
+  _createdAt: timestamp("created_at").defaultNow().notNull(),
 });

@@ -1,4 +1,11 @@
-import { pgTable, serial, varchar, integer, text } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  serial,
+  varchar,
+  integer,
+  text,
+  timestamp,
+} from "drizzle-orm/pg-core";
 import { author } from "./author"; // assuming you already defined the author table
 import { relations } from "drizzle-orm";
 
@@ -14,6 +21,7 @@ export const startup = pgTable("startup", {
   category: varchar("category", { length: 50 }).notNull(),
   image: text("image").notNull(),
   pitch: text("pitch"),
+  _createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 export const startupRelations = relations(startup, ({ one }) => ({
