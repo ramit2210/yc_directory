@@ -7,14 +7,13 @@ import markdownit from "markdown-it";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import View from "@/components/View";
-
 const md = markdownit();
 
 const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
     const id = (await params).id;
     const post = await getStartupById(Number(id));
     if (!post) return notFound();
-    console.log(id);
+
     const parsedContent = md.render(post?.pitch || "");
     return (
         <>

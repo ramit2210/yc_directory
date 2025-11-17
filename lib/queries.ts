@@ -91,3 +91,13 @@ export async function incrementViews(id: number) {
         .set({ views: sql`${startup.views} + 1` })
         .where(eq(startup.id, id));
 }
+
+export async function getAuthorByGithubId(username: string) {
+    const rows = await db
+        .select()
+        .from(author)
+        .where(eq(author.username, username))
+        .limit(1);
+
+    return rows[0] || null;
+}
