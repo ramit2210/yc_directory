@@ -9,3 +9,5 @@ export const author = pgTable("author", {
   bio: text("bio"),
   _createdAt: timestamp("created_at").defaultNow().notNull(),
 });
+export type AuthorType = typeof author.$inferSelect;
+export type NewAuthorType = typeof author.$inferInsert;
