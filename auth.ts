@@ -9,29 +9,45 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     callbacks: {
         // 1. SIGN-IN: ensure user exists
         async signIn({ user: { name, email, image }, profile }) {
-            if (!profile?.id || !profile?.login) return false;
+            try {
+                if (!profile?.id || !profile?.login) {
+                    console.error("Missing profile data:", { profile });
+                    return false;
+                }
 
-            const { login, bio } = profile as Profile & {
-                id: string;
-                login: string;
-                bio?: string;
-            };
-            const existing = await getAuthorByGithubId(login);
+                const { login, bio } = profile as Profile & {
+                    id: string;
+                    login: string;
+                    bio?: string;
+                };
 
-            if (!existing) {
-                await db
-                    .insert(author)
-                    .values({
-                        name: name || login,
-                        username: login,
-                        email: email || "",
-                        image: image || "",
-                        bio: bio || "",
-                    })
-                    .returning();
+                console.log("Checking for existing user:", login);
+                const existing = await getAuthorByGithubId(login);
+
+                if (!existing) {
+                    console.log("Creating new user:", login);
+                    // Generate a unique email if not provided (GitHub private email)
+                    const userEmail =
+                        email || `${login}@users.noreply.github.com`;
+
+                    await db
+                        .insert(author)
+                        .values({
+                            name: name || login,
+                            username: login,
+                            email: userEmail,
+                            image: image || null,
+                            bio: bio || null,
+                        })
+                        .returning();
+                    console.log("User created successfully");
+                }
+
+                return true;
+            } catch (error) {
+                console.error("Error in signIn callback:", error);
+                return false;
             }
-
-            return true;
         },
 
         // 2. JWT: attach our internal _id from DB
