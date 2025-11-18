@@ -32,4 +32,4 @@ export const startupRelations = relations(startup, ({ one }) => ({
 }));
 
 export type StartupType = typeof startup.$inferSelect;
-export type NewStartupType = typeof author.$inferInsert;
+export type NewStartupType = typeof startup.$inferInsert;
