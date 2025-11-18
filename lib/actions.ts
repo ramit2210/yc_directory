@@ -25,6 +25,24 @@ export const createPitch = async (
         Array.from(form).filter(([key]) => key !== "pitch")
     );
 
+    // Validate image URL on server-side
+    try {
+        const res = await fetch(link as string, { method: "HEAD" });
+        const contentType = res.headers.get("content-type");
+
+        if (!contentType?.startsWith("image/")) {
+            return parseServerActionResponse({
+                error: "The provided URL is not a valid image",
+                status: "ERROR",
+            });
+        }
+    } catch (error) {
+        return parseServerActionResponse({
+            error: "Failed to validate image URL",
+            status: "ERROR",
+        });
+    }
+
     const slug = slugify(title as string, { lower: true, strict: true });
 
     try {
