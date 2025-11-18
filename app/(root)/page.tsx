@@ -5,7 +5,7 @@ import SearchForm from "../../components/SearchForm";
 import { supabase } from "@/lib/supabase/client";
 import type { StartupType } from "@/db/schema/startup";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export type StartupTypeCard = Omit<
@@ -121,4 +121,14 @@ function HomePage() {
     );
 }
 
-export default HomePage;
+export default function Page() {
+    return (
+        <Suspense
+            fallback={
+                <div className="h-20 w-20 rounded-full border-8 border-gray-300 border-t-blue-500 animate-spin"></div>
+            }
+        >
+            <HomePage />
+        </Suspense>
+    );
+}
