@@ -101,3 +101,38 @@ export async function getAuthorByGithubId(username: string) {
 
     return rows[0] || null;
 }
+
+export async function getAuthorById(id: number) {
+    const row = await db
+        .select()
+        .from(author)
+        .where(eq(author.id, id))
+        .limit(1);
+    return row[0] || null;
+}
+
+export const getStartupsByAuthor = async (authorId: number) => {
+    return db
+        .select({
+            id: startup.id,
+            title: startup.title,
+            slug: startup.slug,
+            _createdAt: sql<string>`${startup._createdAt}::text`,
+            author: {
+                id: author.id,
+                name: author.name,
+                username: author.username,
+                image: author.image,
+                bio: author.bio,
+            },
+            views: startup.views,
+            description: startup.description,
+            category: startup.category,
+            image: startup.image,
+            pitch: startup.pitch,
+        })
+        .from(startup)
+        .leftJoin(author, eq(startup.authorId, author.id))
+        .where(eq(startup.authorId, authorId))
+        .orderBy(desc(startup._createdAt));
+};
